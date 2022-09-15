@@ -20,6 +20,10 @@ MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance.
 
 int count=0;
 int cost = 0;
+int balance=500;
+int password=787;
+int password1=8787;
+bool flag =false;
 const int ROW_NUM = 4; //four rows
 const int COLUMN_NUM = 4; //four columns
 char keys[ROW_NUM][COLUMN_NUM] = {
@@ -106,7 +110,9 @@ void loop()
  
 */
 //RFID End
-if(content.substring(1) == tag){
+
+if(content.substring(1) == tag && balance>=100){
+  
     Serial.println("Authorized access to this tag");
     Serial.println();
     digitalWrite(12,HIGH);
@@ -131,6 +137,7 @@ if(content.substring(1) == tag){
        lcd.print("250 taka");
        count = count+10;
        cost = cost + 250;
+       balance-=250;
       
        
     }
@@ -145,6 +152,7 @@ if(content.substring(1) == tag){
         lcd.print("100 taka");
        count = count+5;
        cost = cost + 100;
+       balance-=100;
       
     }
     if(keypressed=='3')
@@ -158,21 +166,57 @@ if(content.substring(1) == tag){
         lcd.print("150 taka");
        count = count+10;
        cost = cost + 150;
+       balance-=150;
       
     }
+    if(keypressed=='5')
+    {
+       lcd.setCursor(2, 0);
+       lcd.print("Your Balance:");
+        lcd.setCursor(2, 1);
+       lcd.print(balance);
+       lcd.print(" Taka");
 
     
-   
-   
-    //delay(100);
+    }
+     
+       if(keypressed=='7'){
+       balance+=500;
+       lcd.setCursor(0, 0);
+       lcd.print("Balance Reacharged");
+       delay(1000);
+       lcd.clear(); 
+       lcd.setCursor(0, 0);
+       lcd.print("Current Balance: ");
+       lcd.setCursor(0, 1);
+       lcd.print(balance);
+       lcd.print(" Taka");
+        delay(2000);
+        lcd.clear();
+       
+
+       }
+       if(keypressed=='8'){
+       balance+=1000;
+       lcd.setCursor(0, 0);
+       lcd.print("Balance Reacharged");
+       lcd.clear();
+       delay(500);
+       lcd.setCursor(0, 0);
+       lcd.print("Current Balance: ");
+       lcd.setCursor(0, 1);
+       lcd.print(balance);
+       lcd.print(" Taka");
+       }
+       
+    }
+
 
     if(keypressed=='*')
     {
       Serial.println(" Access denied");
-      digitalWrite(12,LOW);
-      
       hc05.print("\nOrder Confirmed "); 
-
+      digitalWrite(12,LOW);
       
       lcd.setCursor(0, 0);
         lcd.print("Order Received");
@@ -190,15 +234,17 @@ if(content.substring(1) == tag){
      lcd.print("Total Cost:");
       //lcd.setCursor(2, 1);
       lcd.print(cost);
-      
+      cost=0;
+      count=0;
         delay(10000);
          lcd.clear();
 
-     
-     
     }
-
-
+    if(keypressed=='9')
+    {
+      Serial.println(" Access denied"); 
+      digitalWrite(12,LOW);
+    }
     if(keypressed=='#')
     {
       hc05.print("\nCenceled Whole Order "); 
@@ -206,7 +252,8 @@ if(content.substring(1) == tag){
         lcd.print("Order Cenceled");
         
         count=0;
-
+        cost=0;
+        //balance=500;
          delay(5000);
          lcd.clear();
       
@@ -214,6 +261,25 @@ if(content.substring(1) == tag){
     
   }
   
-  
+ else {
+        lcd.setCursor(0, 0);
+        lcd.print("Balance");
+        lcd.setCursor(0, 1);
+        lcd.print("Insufficient");
+        delay(1000);
+        lcd.clear();
+        cost=0;
+        count=0;
+        balance=500;
+        lcd.setCursor(0, 0);
+        lcd.print("Please Reacharge");
+        delay(1000);
+        lcd.clear();
+        lcd.setCursor(2, 0);
+       lcd.print("7--> 500");
+       lcd.setCursor(2, 1);
+       lcd.print("8--> 1000");
+       delay(3000);
+       lcd.clear();
 }
 }
