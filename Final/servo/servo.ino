@@ -30,7 +30,7 @@ void loop() {
      digitalWrite(26,HIGH);
     digitalWrite(42,LOW);
   } 
-  //IP END
+  //IR END
 
   int buttonState = digitalRead(x); //read the input pin
 
