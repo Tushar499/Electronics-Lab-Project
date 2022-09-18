@@ -5,6 +5,7 @@
 #include <SPI.h> //RFID
 #include <MFRC522.h> //RFID
 
+
 LiquidCrystal_I2C lcd(0x27,16,2);
 SoftwareSerial hc05(10,11);
 //RFID Start
@@ -40,6 +41,11 @@ Keypad keypad = Keypad( makeKeymap(keys), pin_rows, pin_column, ROW_NUM, COLUMN_
 void setup() {
   Serial.begin(9600);
   //lcd.begin(16,2);
+  //Sensor Start
+   pinMode(35,INPUT);
+  pinMode(42,OUTPUT);
+  pinMode(26,OUTPUT);
+  //Sensor End
   //RFID Start
   SPI.begin();      // Initiate  SPI bus
   mfrc522.PCD_Init();   // Initiate MFRC522
@@ -51,6 +57,7 @@ void setup() {
   lcd.init();
   lcd.backlight();
   hc05.begin(9600);
+  //hc05.print("TABLE NO 1\n"); 
 
 
 
@@ -58,6 +65,16 @@ void setup() {
 
 void loop()
 {
+  //Sensor Start
+  if(digitalRead(35)==0){
+    digitalWrite(26,LOW);
+     digitalWrite(42,HIGH);
+  }
+  if(digitalRead(35)==1){
+     digitalWrite(26,HIGH);
+    digitalWrite(42,LOW);
+  }
+  //Sensor End
   //RFID Start
   // Look for new cards
   if ( ! mfrc522.PICC_IsNewCardPresent()) 
@@ -111,7 +128,7 @@ void loop()
 */
 //RFID End
 
-if(content.substring(1) == tag && balance>=100){
+if(content.substring(1) == tag && balance>0 ){
   
     Serial.println("Authorized access to this tag");
     Serial.println();
@@ -164,6 +181,8 @@ if(content.substring(1) == tag && balance>=100){
        lcd.print("3. BURGER ");
            lcd.setCursor(2, 1);
         lcd.print("150 taka");
+        delay(2000);
+        lcd.clear();
        count = count+10;
        cost = cost + 150;
        balance-=150;
@@ -201,7 +220,7 @@ if(content.substring(1) == tag && balance>=100){
        lcd.setCursor(0, 0);
        lcd.print("Balance Reacharged");
        lcd.clear();
-       delay(500);
+       delay(1000);
        lcd.setCursor(0, 0);
        lcd.print("Current Balance: ");
        lcd.setCursor(0, 1);
@@ -262,18 +281,19 @@ if(content.substring(1) == tag && balance>=100){
   }
   
  else {
+    hc05.print("\nCenceled Whole Order "); 
         lcd.setCursor(0, 0);
         lcd.print("Balance");
         lcd.setCursor(0, 1);
         lcd.print("Insufficient");
-        delay(1000);
+        delay(2000);
         lcd.clear();
         cost=0;
         count=0;
         balance=500;
         lcd.setCursor(0, 0);
         lcd.print("Please Reacharge");
-        delay(1000);
+        delay(2000);
         lcd.clear();
         lcd.setCursor(2, 0);
        lcd.print("7--> 500");
