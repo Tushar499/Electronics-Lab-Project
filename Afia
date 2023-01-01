@@ -1,1 +1,54 @@
+#define BUTTON_PIN 4
+#define BUTTON2_PIN 5
+#define BUTTON3_PIN 6
+const int ledPin=7;
+const int ledPin2=8;
+const int ledPin3=9;
 
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(BUTTON_PIN, INPUT);
+  pinMode(BUTTON2_PIN, INPUT);
+  pinMode(BUTTON3_PIN, INPUT);
+  pinMode(ledPin,OUTPUT);
+  pinMode(ledPin2,OUTPUT);
+  pinMode(ledPin3,OUTPUT);
+}
+void loop()
+{
+  byte buttonState = digitalRead(BUTTON_PIN);
+  byte buttonState2 = digitalRead(BUTTON2_PIN);
+  byte buttonState3 = digitalRead(BUTTON3_PIN);
+  
+  if (buttonState == LOW) {
+      Serial.println("Ordered Pizza");
+      {
+      digitalWrite(ledPin3,HIGH);
+      delay(10000);
+      }
+  }else {
+    digitalWrite(ledPin3,LOW);
+  }
+   
+  if(buttonState2 == LOW){
+      Serial.println("Ordered Barger");
+      {
+      digitalWrite(ledPin2,HIGH);
+      delay(10000);
+      }
+  }else {
+    digitalWrite(ledPin2,LOW);
+  }
+ 
+  if(buttonState3 == LOW){
+      Serial.println("Order Cancel");
+      {
+      digitalWrite(ledPin,HIGH);
+      delay(5000);
+      }
+  }else {
+    digitalWrite(ledPin,LOW);
+  }
+  //delay(100);
+}
